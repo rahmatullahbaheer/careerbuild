@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #faf7fd;
   --foreground: #171717;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-geist-sans, system-ui, -apple-system, sans-serif);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
+
+/* Custom background mesh & perspective ray grid */
+.auth-bg-gradient {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(243, 232, 255, 0.9) 0%, transparent 40%),
+    radial-gradient(circle at 90% 15%, rgba(254, 243, 199, 0.8) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(253, 230, 240, 0.95) 0%, transparent 60%),
+    radial-gradient(circle at 85% 85%, rgba(252, 231, 243, 0.9) 0%, transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(238, 242, 255, 0.9) 0%, transparent 45%),
+    #faf5ff;
+}
+
+.perspective-ray-grid {
+  background-image: 
+    radial-gradient(circle at 50% 50%, transparent 0, transparent 100px, rgba(236, 72, 153, 0.04) 100px, transparent 101px),
+    repeating-conic-gradient(from 0deg at 50% 45%, rgba(192, 132, 252, 0.08) 0deg 0.5deg, transparent 0.5deg 10deg);
+}
+
+/* Custom animated focus ring & smooth inputs */
+.auth-input {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3.5px rgba(129, 140, 248, 0.25);
+}
+
+/* Smooth tab transition */
+.tab-transition {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Auto right-scrolling marquee animation */
+@keyframes marqueeRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 30s linear infinite;
+}
+
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+
