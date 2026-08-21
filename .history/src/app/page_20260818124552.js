@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen  flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-purple-700 flex items-center justify-center">
       <div className="text-center">
         <Image
           src="/logo.png"
@@ -13,6 +13,9 @@ export default function Home() {
           priority
           className="mb-6 mx-auto"
         />
+
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+        <p className="text-white font-semibold">Loading...</p>
       </div>
     </div>
   );
