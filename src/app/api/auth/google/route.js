@@ -15,7 +15,7 @@ export async function GET(req) {
     // Dynamic request origin calculation: strictly use localhost origin when running locally
     const requestOrigin = req.nextUrl?.origin || origin || "http://localhost:3000";
     const isLocal = requestOrigin.includes("localhost") || requestOrigin.includes("127.0.0.1");
-    const siteUrl = (isLocal ? requestOrigin : (process.env.NEXT_PUBLIC_SITE_URL || requestOrigin)).replace(/\/$/, "");
+    const siteUrl = (isLocal ? requestOrigin : (process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || requestOrigin)).replace(/\/$/, "");
     const redirectUri = `${siteUrl}/api/auth/google/callback`;
 
     console.log(`[Google OAuth Init] Client ID: ${googleClientId.substring(0, 15)}... | Redirect URI: ${redirectUri}`);

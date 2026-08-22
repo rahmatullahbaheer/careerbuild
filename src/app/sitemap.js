@@ -1,7 +1,7 @@
 // sitemap.js — Dynamic XML Sitemap for Search Engines
 // See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
+const BASE_URL = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
 
 export default function sitemap() {
   const currentDate = new Date().toISOString();

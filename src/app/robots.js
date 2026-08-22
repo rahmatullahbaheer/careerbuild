@@ -1,7 +1,7 @@
 // robots.js — Programmatic robots file for Googlebot & Search Crawlers
 // See: https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
+const SITE_URL = process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
 
 export default function robots() {
   return {

@@ -6,19 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "db:push": "prisma db push",
-    "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.3",
     "@supabase/supabase-js": "^2.112.3",
     "formik": "^2.4.9",
     "framer-motion": "^13.1.1",
     "lucide-react": "^1.33.0",
     "next": "16.3.0",
     "nodemailer": "^9.0.5",
+    "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "swiper": "^14.1.0",
@@ -29,7 +26,6 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
-    "prisma": "^6.19.3",
     "tailwindcss": "^4"
   }
 }
