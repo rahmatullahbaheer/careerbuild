@@ -1,18 +1,22 @@
 import { NextResponse } from "next/server";
 
-function getSiteUrl(req) {
-  if (process.env.SITE_URL) {
-    return process.env.SITE_URL.replace(/\/$/, "");
+function getRedirectUri(req) {
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
+  const requestOrigin = req.nextUrl?.origin || "";
+  const isLocal =
+    host.includes("localhost") ||
+    host.includes("127.0.0.1") ||
+    requestOrigin.includes("localhost") ||
+    requestOrigin.includes("127.0.0.1");
+
+  if (isLocal) {
+    const localBase = isLocal ? (requestOrigin || "http://localhost:3000") : "http://localhost:3000";
+    return `${localBase.replace(/\/$/, "")}/api/auth/google/callback`;
   }
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
-  }
-  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
-  const proto = req.headers.get("x-forwarded-proto") || "https";
-  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
-    return `${proto}://${host}`.replace(/\/$/, "");
-  }
-  return req.nextUrl?.origin?.replace(/\/$/, "") || "http://localhost:3000";
+
+  // Production Canonical Redirect URI (Matches Google Console JSON exactly!)
+  const prodBase = (process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.vercel.app").replace(/\/$/, "");
+  return `${prodBase}/api/auth/google/callback`;
 }
 
 export async function GET(req) {
@@ -27,8 +31,7 @@ export async function GET(req) {
 
   // If valid Google Client ID exists, initiate Google OAuth consent screen
   if (isValidClientId) {
-    const siteUrl = getSiteUrl(req);
-    const redirectUri = `${siteUrl}/api/auth/google/callback`;
+    const redirectUri = getRedirectUri(req);
 
     console.log(`[Google OAuth Init] Client ID: ${googleClientId.substring(0, 15)}... | Redirect URI: ${redirectUri}`);
 
