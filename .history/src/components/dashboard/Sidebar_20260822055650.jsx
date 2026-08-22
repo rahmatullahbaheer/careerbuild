@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useReducedMotion } from "framer-motion";
 import {
   LayoutDashboard,
   FileText,
@@ -17,17 +16,12 @@ import {
   Smartphone,
   Menu,
   X,
-  ArrowRight,
-  Download,
-  Star,
-  CheckCircle2,
 } from "lucide-react";
 import Linkedin from "../icons/LinkedinIcon";
 
 export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const shouldReduceMotion = useReducedMotion();
 
   const menuItems = [
     {
@@ -211,96 +205,39 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
             </nav>
           </div>
           {/* Promo Mobile App Download Card */}
-          <motion.div
-            whileHover={
-              shouldReduceMotion
-                ? {}
-                : {
-                    y: -3,
-                    scale: 1.01,
-                    transition: { duration: 0.25, ease: "easeOut" },
-                  }
-            }
-            className="group relative mt-6 p-4 rounded-2xl bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white overflow-hidden shadow-lg border border-white/10"
-          >
-            {/* Ambient Animated Glow Orb */}
-            <div
-              className="absolute -top-10 -right-10 w-28 h-28 bg-blue-500/20 rounded-full blur-2xl pointer-events-none group-hover:bg-blue-400/30 transition-all duration-300"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute -bottom-8 -left-8 w-24 h-24 bg-indigo-500/20 rounded-full blur-xl pointer-events-none"
-              aria-hidden="true"
-            />
-
-            {/* Background Geometric Line Art */}
-            <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">
-              <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
+          <div className="relative mt-6 p-4 rounded-2xl bg-gradient-to-br from-[#064e3b] to-[#022c22] text-white overflow-hidden shadow-md">
+            <div className="absolute -right-4 -bottom-4 opacity-15 pointer-events-none">
+              <svg width="120" height="120" viewBox="0 0 100 100" fill="none">
+                <path
+                  d="M0 50 Q 25 20, 50 50 T 100 50"
                   stroke="white"
-                  strokeWidth="2"
-                  strokeDasharray="4 4"
+                  strokeWidth="6"
                 />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="25"
+                <path
+                  d="M0 70 Q 25 40, 50 70 T 100 70"
                   stroke="white"
-                  strokeWidth="1.5"
+                  strokeWidth="6"
                 />
               </svg>
             </div>
 
             <div className="relative z-10 space-y-3">
-              {/* Header: Animated Phone & Rating Tag */}
-              <div className="flex items-center justify-between">
-                <motion.div
-                  animate={shouldReduceMotion ? {} : { y: [0, -3, 0] }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="w-8 h-8 rounded-xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center backdrop-blur-md shadow-xs text-blue-300 group-hover:scale-105 transition-transform"
-                >
-                  <Smartphone className="w-4 h-4 text-blue-300" />
-                </motion.div>
-
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/10 border border-white/15 text-blue-200">
-                  <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                  4.9
-                </span>
+              <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-xs">
+                <Smartphone className="w-4 h-4 text-white" />
               </div>
-
-              {/* Title & Copy */}
               <div>
-                <div className="flex items-center gap-1.5">
-                  <h4 className="text-xs font-bold text-white tracking-tight">
-                    CareerBuild Mobile
-                  </h4>
-                  <span
-                    className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-xs"
-                    title="Live Sync Active"
-                  />
-                </div>
-                <p className="text-[10.5px] text-zinc-300/85 mt-0.5 leading-snug">
-                  Edit, review & sync resumes seamlessly on iOS & Android.
+                <h4 className="text-xs font-bold text-white tracking-wide">
+                  Download Mobile App
+                </h4>
+                <p className="text-[10px] text-emerald-200/80 mt-0.5">
+                  Build & edit resumes on the go
                 </p>
               </div>
-
-              {/* Interactive Download Action */}
-              <button
-                type="button"
-                className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 group/btn cursor-pointer"
-              >
-                <span>Get Mobile App</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
+              <button className="w-full py-2 rounded-xl bg-[#10b981] hover:bg-[#059669] text-white text-xs font-bold transition-all shadow-xs">
+                Download
               </button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </aside>
     </>

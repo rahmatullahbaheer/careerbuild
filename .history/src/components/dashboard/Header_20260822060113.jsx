@@ -96,10 +96,7 @@ export default function Header({
         </button>
 
         {/* User Profile Avatar with Dropdown */}
-        <div
-          className="relative pl-2 border-l border-gray-200/80"
-          ref={dropdownRef}
-        >
+        <div className="relative pl-2 border-l border-gray-200/80" ref={dropdownRef}>
           <button
             onClick={() => setDropdownOpen((prev) => !prev)}
             aria-expanded={dropdownOpen}
@@ -171,9 +168,7 @@ export default function Header({
 
                   {/* Plan Badge */}
                   <div className="flex items-center justify-between pt-2 border-t border-zinc-200/60 text-[10px]">
-                    <span className="font-semibold text-zinc-500">
-                      Plan Status
-                    </span>
+                    <span className="font-semibold text-zinc-500">Plan Status</span>
                     <span className="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
                       <ShieldCheck className="w-3 h-3 text-blue-600" />
                       {user.plan || "Pro Plan"}

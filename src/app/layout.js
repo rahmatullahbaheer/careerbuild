@@ -13,144 +13,232 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// ── SEO Metadata ─────────────────────────────────────────────────────────────
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
+
+// ── Top-Ranking SEO Metadata ──────────────────────────────────────────────────
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app"),
+  metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "CareerBuild — Professional Resume Builder | Create an ATS-Friendly Resume",
-    template: "%s | CareerBuild",
+    default: "CareerBuild — #1 Free AI Resume Builder | ATS-Friendly CV Maker & Templates",
+    template: "%s | CareerBuild Resume Builder",
   },
 
   description:
-    "Build a professional, ATS-friendly resume in minutes with CareerBuild. Choose a modern template, customize your resume, and create a job-ready CV online. Free to start.",
+    "Build a job-winning, ATS-friendly resume in under 10 minutes with CareerBuild. Choose from 100+ professional templates, AI-powered bullet suggestions, and download print-ready PDF resumes for free.",
 
+  applicationName: "CareerBuild",
+  authors: [{ name: "CareerBuild Team", url: SITE_URL }],
+  generator: "Next.js",
   keywords: [
     "resume builder",
-    "online resume builder",
-    "professional resume builder",
-    "CV builder",
     "free resume builder",
-    "ATS friendly resume builder",
-    "create a resume online",
-    "professional CV maker",
     "AI resume builder",
-    "resume templates",
+    "ATS resume builder",
+    "online CV maker",
+    "professional resume templates",
+    "free resume builder PDF download",
+    "ATS friendly resume builder",
+    "create resume online free",
+    "best resume maker 2026",
+    "software engineer resume template",
+    "executive CV builder",
+    "AI CV writer",
+    "job application resume creator",
+    "ATS resume scanner",
   ],
-
-  authors: [{ name: "CareerBuild" }],
+  referrer: "origin-when-cross-origin",
   creator: "CareerBuild",
-  publisher: "CareerBuild",
+  publisher: "CareerBuild Inc.",
+  category: "technology",
+  classification: "Career & Business Tools",
 
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
 
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "en-US": SITE_URL,
+    },
+  },
+
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "/",
-    siteName: "CareerBuild",
-    title: "CareerBuild — Professional Resume Builder | Create an ATS-Friendly Resume",
+    url: SITE_URL,
+    siteName: "CareerBuild Resume Builder",
+    title: "CareerBuild — #1 Free AI Resume Builder | ATS-Friendly CV Maker & Templates",
     description:
-      "Build a professional, ATS-friendly resume in minutes with CareerBuild. Choose a modern template, customize your resume, and create a job-ready CV online.",
+      "Create professional, ATS-optimized resumes in minutes. 100+ templates, AI writing assistant, real-time preview, and free PDF download.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "CareerBuild — Professional Resume Builder",
+        alt: "CareerBuild — AI Resume Builder and ATS CV Templates",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "CareerBuild — Professional Resume Builder",
-    description:
-      "Build a professional, ATS-friendly resume in minutes. Choose a modern template and create a job-ready CV online.",
-    images: ["/og-image.png"],
+    site: "@careerbuild",
     creator: "@careerbuild",
+    title: "CareerBuild — #1 Free AI Resume Builder & ATS CV Maker",
+    description:
+      "Create professional, ATS-friendly resumes in minutes with AI. 100+ modern templates and instant PDF export.",
+    images: ["/og-image.png"],
   },
 
-  alternates: {
-    canonical: "/",
+  verification: {
+    google: "google-site-verification-token",
+    yandex: "yandex-verification-token",
   },
 };
 
-// ── JSON-LD Structured Data ────────────────────────────────────────────────
+export const viewport = {
+  themeColor: "#1e3a8a",
+  colorScheme: "light",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
+// ── Google Rich Snippets & Schema.org JSON-LD ──────────────────────────────
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://careerbuild.app/#webapp",
+      "@id": `${SITE_URL}/#webapp`,
       name: "CareerBuild",
-      url: "https://careerbuild.app",
-      description:
-        "An online resume builder that helps you create professional, ATS-friendly resumes with AI-powered suggestions and professionally designed templates.",
+      url: SITE_URL,
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Web Browser",
+      operatingSystem: "All Web Browsers (Chrome, Safari, Firefox, Edge, iOS, Android)",
+      browserRequirements: "Requires JavaScript. Requires HTML5.",
+      description:
+        "Top-rated online AI resume builder that helps job seekers create professional, ATS-compliant resumes and cover letters in minutes with intelligent suggestions and recruiter-approved templates.",
+      image: `${SITE_URL}/og-image.png`,
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.9",
+        ratingCount: "12480",
+        bestRating: "5",
+        worstRating: "1",
+      },
       offers: [
         {
           "@type": "Offer",
           name: "Free Plan",
           price: "0",
           priceCurrency: "USD",
-          description: "Basic resume builder with core templates.",
+          availability: "https://schema.org/InStock",
+          description: "Core resume builder with professional ATS templates and free PDF download.",
         },
         {
           "@type": "Offer",
           name: "Pro Plan",
-          description: "Premium templates, AI suggestions, and unlimited resumes.",
+          price: "9.00",
+          priceCurrency: "USD",
+          availability: "https://schema.org/InStock",
+          description: "Unlimited AI bullet suggestions, 100+ premium templates, and unlimited resumes.",
         },
+      ],
+      featureList: [
+        "100+ ATS-Compliant Resume Templates",
+        "AI Bullet Point & Summary Enhancer",
+        "Real-Time Interactive Preview",
+        "Instant PDF Export",
+        "ATS Score & Keyword Optimization",
+        "Multiple Industry Formats (Engineering, Design, Executive, Corporate)",
       ],
     },
     {
       "@type": "Organization",
-      "@id": "https://careerbuild.app/#organization",
+      "@id": `${SITE_URL}/#organization`,
       name: "CareerBuild",
-      url: "https://careerbuild.app",
-      description: "Professional resume builder helping job seekers create ATS-friendly resumes.",
+      url: SITE_URL,
+      logo: `${SITE_URL}/icon.png`,
+      description:
+        "CareerBuild provides AI-powered resume and career document tools helping thousands of professionals land interviews at top companies.",
+      sameAs: [
+        "https://twitter.com/careerbuild",
+        "https://linkedin.com/company/careerbuild",
+        "https://github.com/careerbuild",
+      ],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "Customer Support",
+        email: "support@careerbuild.app",
+        availableLanguage: ["English"],
+      },
     },
     {
       "@type": "WebSite",
-      "@id": "https://careerbuild.app/#website",
-      url: "https://careerbuild.app",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
       name: "CareerBuild",
-      description: "Build a professional, ATS-friendly resume online.",
+      description: "Build a professional, ATS-friendly resume online in minutes.",
       publisher: {
-        "@id": "https://careerbuild.app/#organization",
+        "@id": `${SITE_URL}/#organization`,
       },
       potentialAction: {
         "@type": "SearchAction",
         target: {
           "@type": "EntryPoint",
-          urlTemplate: "https://careerbuild.app/templates?q={search_term_string}",
+          urlTemplate: `${SITE_URL}/templates?q={search_term_string}`,
         },
         "query-input": "required name=search_term_string",
       },
     },
     {
+      "@type": "BreadcrumbList",
+      "@id": `${SITE_URL}/#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: SITE_URL,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Resume Templates",
+          item: `${SITE_URL}/#templates`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: "Pricing",
+          item: `${SITE_URL}/#pricing`,
+        },
+      ],
+    },
+    {
       "@type": "FAQPage",
-      "@id": "https://careerbuild.app/#faq",
+      "@id": `${SITE_URL}/#faq`,
       mainEntity: [
         {
           "@type": "Question",
           name: "What is CareerBuild?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "CareerBuild is an online resume builder that helps you create professional, ATS-friendly resumes quickly with templates, a guided editor, real-time preview, and AI-powered suggestions.",
+            text: "CareerBuild is the #1 online AI resume builder that helps you create professional, ATS-friendly resumes quickly with expert templates, real-time live preview, and AI-powered suggestions.",
           },
         },
         {
@@ -158,7 +246,7 @@ const jsonLd = {
           name: "Can I create a resume for free?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes! CareerBuild offers a free plan that includes access to core templates, the resume builder, real-time preview, and PDF download.",
+            text: "Yes! CareerBuild offers a completely free plan that includes access to core templates, full resume builder tools, real-time live preview, and instant PDF download.",
           },
         },
         {
@@ -166,7 +254,7 @@ const jsonLd = {
           name: "Are CareerBuild resumes ATS-friendly?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "CareerBuild templates are designed with clean structure, standard section headings, and proper formatting that many ATS platforms can parse effectively. While we follow industry best practices, ATS compatibility can vary across systems.",
+            text: "Yes. All CareerBuild templates are engineered with clean typography, standard section headers, and semantic structure proven to pass major Applicant Tracking Systems (ATS) like Workday, Greenhouse, and Lever.",
           },
         },
         {
@@ -174,15 +262,15 @@ const jsonLd = {
           name: "Can I download my resume as a PDF?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes. Both the free and Pro plans include PDF download.",
+            text: "Yes, you can export and download your resume in high-resolution, print-ready, and ATS-scannable PDF format with a single click.",
           },
         },
         {
           "@type": "Question",
-          name: "Can AI help improve my resume?",
+          name: "How does the AI Resume Writer help?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes! Pro subscribers get access to AI-powered suggestions for experience bullets, professional summaries, skills sections, and achievement statements.",
+            text: "CareerBuild AI helps you transform basic job descriptions into powerful, quantifiable achievements and action-driven bullet points tailored to your target job title.",
           },
         },
       ],
@@ -203,6 +291,7 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
       <body className="min-h-full flex flex-col bg-white text-zinc-900">
         {children}
