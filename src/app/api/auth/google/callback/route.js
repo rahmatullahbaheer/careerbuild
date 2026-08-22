@@ -14,15 +14,15 @@ export async function GET(request) {
     return NextResponse.redirect(new URL("/login?error=Google login failed", request.url));
   }
 
-  const clientId = process.env.GOOGLE_CLIENT_ID;
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+  const clientId = (process.env.GOOGLE_CLIENT_ID || "").trim();
+  const clientSecret = (process.env.GOOGLE_CLIENT_SECRET || "").trim();
 
   if (!clientId || !clientSecret) {
     console.error("[Google OAuth Error]: Missing GOOGLE_CLIENT_ID or GOOGLE_CLIENT_SECRET environment variables.");
-    return NextResponse.redirect(new URL("/login?error=Server configuration error", request.url));
+    return NextResponse.redirect(new URL("/login?error=Server configuration error: Google environment variables missing.", request.url));
   }
   
-  let redirectUri = process.env.GOOGLE_REDIRECT_URI || "https://careerbuild.vercel.app/api/auth/google/callback";
+  let redirectUri = (process.env.GOOGLE_REDIRECT_URI || "").trim() || "https://careerbuild.vercel.app/api/auth/google/callback";
   if (host.includes("localhost")) {
     redirectUri = `${protocol}://${host}/api/auth/google/callback`;
   }
