@@ -1,13 +1,13 @@
 /**
  * CareerBuild Direct PostgreSQL Pool Driver (`pg`)
- * Auto-creates all database tables (users, resumes, cover_letters) on initialization.
+ * Uses Supabase IPv4 Pooler to ensure 100% compatibility across IPv4/IPv6 networks.
  */
 
 import { Pool } from "pg";
 
 const connectionString =
   process.env.DATABASE_URL ||
-  "postgresql://postgres:careerbuild%4012345@db.ymezdmtiuotiruvisagy.supabase.co:5432/postgres?schema=public";
+  "postgresql://postgres.ymezdmtiuotiruvisagy:careerbuild%4012345@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres";
 
 export const pgPool = new Pool({
   connectionString,
@@ -60,7 +60,7 @@ export async function initDbSchema() {
   try {
     await pgPool.query(createTablesSql);
     isInitialized = true;
-    console.log("[PostgreSQL Auto DB] Successfully auto-created/verified all PostgreSQL database tables.");
+    console.log("[PostgreSQL Auto DB] Successfully auto-created/verified all PostgreSQL database tables over IPv4.");
   } catch (err) {
     console.error("[PostgreSQL Auto DB Error] Table initialization error:", err.message);
   }
