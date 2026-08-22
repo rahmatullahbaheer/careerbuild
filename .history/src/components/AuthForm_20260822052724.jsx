@@ -95,7 +95,7 @@ export default function AuthForm({ initialMode = "signup" }) {
       </div>
 
       {/* Main Container */}
-      <div className="relative z-10 w-full max-w-[420px] mx-auto flex flex-col items-center">
+      <div className="relative z-10 w-full max-w-[420px]  flex flex-col items-center">
         {/* Yellow Top Pill Badge */}
         <div className="mb-4 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#fef08a] border border-[#fef08a] text-[#713f12] text-xs font-semibold shadow-xs">
           <button
@@ -126,7 +126,7 @@ export default function AuthForm({ initialMode = "signup" }) {
 
         {/* Auth Card Outer Wireframe Border Box */}
         <div className="relative w-full p-1 rounded-[24px] bg-gradient-to-b from-purple-200/50 via-pink-100/40 to-purple-200/30 backdrop-blur-md shadow-[0_15px_45px_rgba(215,180,225,0.45)]">
-          <div className="w-full bg-[#faf7fd]/90 backdrop-blur-xl rounded-[22px] p-7 sm:p-9 border border-white/80">
+          <div className="w-full bg-[#faf7fd]/90 backdrop-blur-xl rounded-[22px] p-6 sm:p-9 border border-white/80">
             {/* Feedback Message */}
             {successMessage && (
               <div className="mb-5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium text-center">

@@ -123,18 +123,19 @@ export default function DashboardView() {
           index={3}
           title="LinkedIn Sync"
           description="Automatically align your resume keywords with your LinkedIn profile."
-          count="88% Score"
+          count="94% Score"
           subtitle="Profile Alignment"
-          badgeText="Upcoming"
-          status="soon"
+          badgeText="Active"
+          status="launch"
           gradient="from-blue-600 via-sky-600 to-cyan-600"
           shadowColor="shadow-blue-900/20"
+          onLaunch={() => alert("Navigate to LinkedIn Sync menu on the sidebar to view full Optimizer & AI tools!")}
           details={{
-            description: "LinkedIn profile alignment feature coming soon.",
+            description: "Direct LinkedIn profile optimization & sync platform.",
             items: [
               "Direct LinkedIn Profile Import",
-              "+34% Increased Recruiter Views",
-              "Automated Headline Generator",
+              "+42% Increased Recruiter Views",
+              "AI Headline & About Generator",
             ],
           }}
         />
@@ -146,16 +147,11 @@ export default function DashboardView() {
       {/* Recent Resumes Grid */}
       <RecentResumesGrid />
 
-      {/* Analytics, Reminders & Reviewers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <ProjectAnalytics />
-        <RemindersCard />
-        <TeamCollaboration />
-      </div>
+      
 
       {/* Progress & Time Tracker Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <ProjectProgress />
+    
         <TimeTracker />
       </div>
     </div>

@@ -7,7 +7,7 @@ export default function AuthForm({ initialMode = "signup" }) {
   const [mode, setMode] = useState(initialMode); // 'signin' | 'signup'
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  
   // Form State
   const [formData, setFormData] = useState({
     fullName: "",
@@ -39,7 +39,7 @@ export default function AuthForm({ initialMode = "signup" }) {
       setSuccessMessage(
         mode === "signup"
           ? "Account created successfully! Welcome aboard."
-          : "Signed in successfully! Redirecting...",
+          : "Signed in successfully! Redirecting..."
       );
     }, 1000);
   };
@@ -73,29 +73,14 @@ export default function AuthForm({ initialMode = "signup" }) {
           <line x1="500" y1="500" x2="0" y2="500" />
           <line x1="500" y1="500" x2="0" y2="250" />
           {/* Concentric rectangle guides */}
-          <rect
-            x="200"
-            y="200"
-            width="600"
-            height="600"
-            rx="16"
-            strokeDasharray="3 3"
-            opacity="0.3"
-          />
-          <rect
-            x="300"
-            y="270"
-            width="400"
-            height="460"
-            rx="16"
-            strokeDasharray="3 3"
-            opacity="0.4"
-          />
+          <rect x="200" y="200" width="600" height="600" rx="16" strokeDasharray="3 3" opacity="0.3" />
+          <rect x="300" y="270" width="400" height="460" rx="16" strokeDasharray="3 3" opacity="0.4" />
         </svg>
       </div>
 
       {/* Main Container */}
       <div className="relative z-10 w-full max-w-[420px] mx-auto flex flex-col items-center">
+        
         {/* Yellow Top Pill Badge */}
         <div className="mb-4 inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#fef08a] border border-[#fef08a] text-[#713f12] text-xs font-semibold shadow-xs">
           <button
@@ -127,6 +112,7 @@ export default function AuthForm({ initialMode = "signup" }) {
         {/* Auth Card Outer Wireframe Border Box */}
         <div className="relative w-full p-1 rounded-[24px] bg-gradient-to-b from-purple-200/50 via-pink-100/40 to-purple-200/30 backdrop-blur-md shadow-[0_15px_45px_rgba(215,180,225,0.45)]">
           <div className="w-full bg-[#faf7fd]/90 backdrop-blur-xl rounded-[22px] p-7 sm:p-9 border border-white/80">
+            
             {/* Feedback Message */}
             {successMessage && (
               <div className="mb-5 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-medium text-center">
@@ -135,6 +121,7 @@ export default function AuthForm({ initialMode = "signup" }) {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              
               {/* Full Name (Sign Up only) */}
               {mode === "signup" && (
                 <div className="space-y-1.5">
@@ -170,19 +157,8 @@ export default function AuthForm({ initialMode = "signup" }) {
                   />
                   {/* Cursor Indicator SVG overlay matching screenshot demo if focused */}
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-80">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M7 2L17 12L12 13L15 20L12 21L9 14L4 17L7 2Z"
-                        fill="#1e293b"
-                        stroke="#ffffff"
-                        strokeWidth="1.5"
-                      />
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 2L17 12L12 13L15 20L12 21L9 14L4 17L7 2Z" fill="#1e293b" stroke="#ffffff" strokeWidth="1.5"/>
                     </svg>
                   </div>
                 </div>
@@ -235,9 +211,7 @@ export default function AuthForm({ initialMode = "signup" }) {
                     />
                     <button
                       type="button"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
                       {showConfirmPassword ? (
@@ -362,8 +336,10 @@ export default function AuthForm({ initialMode = "signup" }) {
                 )}
               </p>
             </div>
+
           </div>
         </div>
+
       </div>
     </div>
   );

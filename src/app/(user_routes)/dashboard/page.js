@@ -1,4 +1,5 @@
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
+import DashboardView from "@/components/dashboard/views/DashboardView";
 
 export const metadata = {
   title: "Dashboard - Donezo",
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function DashboardPage() {
-  return <DashboardLayout />;
+  return (
+    <DashboardLayout>
+      <DashboardView />
+    </DashboardLayout>
+  );
 }

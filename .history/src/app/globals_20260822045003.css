@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+:root {
+  --background: #faf7fd;
+  --foreground: #171717;
+
+  /* Landing page design tokens */
+  --landing-bg: #fafafa;
+  --landing-bg-alt: #f4f4f5;
+  --landing-surface: #ffffff;
+  --landing-border: #e4e4e7;
+  --landing-border-subtle: #f4f4f5;
+  --landing-text: #09090b;
+  --landing-text-muted: #71717a;
+  --landing-text-faint: #a1a1aa;
+  --landing-primary: #4f46e5;
+  --landing-primary-hover: #4338ca;
+  --landing-primary-light: #eef2ff;
+  --landing-secondary: #7c3aed;
+  --landing-accent: #06b6d4;
+  --landing-gradient-from: #4f46e5;
+  --landing-gradient-to: #7c3aed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans, system-ui, -apple-system, sans-serif);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom background mesh & perspective ray grid */
+.auth-bg-gradient {
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(243, 232, 255, 0.9) 0%, transparent 40%),
+    radial-gradient(circle at 90% 15%, rgba(254, 243, 199, 0.8) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(253, 230, 240, 0.95) 0%, transparent 60%),
+    radial-gradient(circle at 85% 85%, rgba(252, 231, 243, 0.9) 0%, transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(238, 242, 255, 0.9) 0%, transparent 45%),
+    #faf5ff;
+}
+
+.perspective-ray-grid {
+  background-image: 
+    radial-gradient(circle at 50% 50%, transparent 0, transparent 100px, rgba(236, 72, 153, 0.04) 100px, transparent 101px),
+    repeating-conic-gradient(from 0deg at 50% 45%, rgba(192, 132, 252, 0.08) 0deg 0.5deg, transparent 0.5deg 10deg);
+}
+
+/* Custom animated focus ring & smooth inputs */
+.auth-input {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3.5px rgba(129, 140, 248, 0.25);
+}
+
+/* Smooth tab transition */
+.tab-transition {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Auto right-scrolling marquee animation */
+@keyframes marqueeRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marqueeRight 30s linear infinite;
+}
+
+.animate-marquee-right:hover {
+  animation-play-state: paused;
+}
+
+/* ============================================================
+   Landing Page Utilities
+   ============================================================ */
+
+/* Dot grid background for hero */
+.landing-dot-grid {
+  background-image: radial-gradient(circle, #d4d4d8 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Subtle grid line background */
+.landing-grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(228, 228, 231, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(228, 228, 231, 0.4) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Glow blob decorations */
+.glow-blob {
+  filter: blur(80px);
+  border-radius: 9999px;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* Hero gradient background */
+.hero-gradient {
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(79, 70, 229, 0.08) 0%, transparent 70%);
+}
+
+/* Primary gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--landing-primary) 0%, var(--landing-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--landing-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Landing page body override */
+body.landing {
+  background: var(--landing-bg);
+  color: var(--landing-text);
+}
+
+/* Card hover lift */
+.card-hover {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px -8px rgba(0, 0, 0, 0.12);
+}
+
+/* Shimmer animation for skeleton/placeholder */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Float animation for hero preview */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
+}
+

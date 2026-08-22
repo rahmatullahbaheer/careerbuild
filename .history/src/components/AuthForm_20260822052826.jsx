@@ -134,7 +134,7 @@ export default function AuthForm({ initialMode = "signup" }) {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               {/* Full Name (Sign Up only) */}
               {mode === "signup" && (
                 <div className="space-y-1.5">

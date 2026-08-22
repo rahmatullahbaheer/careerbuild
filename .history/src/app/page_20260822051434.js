@@ -34,7 +34,7 @@ export default function LandingPage() {
       {/* Main content */}
       <main id="main-content">
         {/* 1. Hero — above the fold */}
-        <Hero />
+        {/* <Hero /> */}
 
         {/* 2. Trust / social proof */}
         <TrustStats />

@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileText,
@@ -15,23 +17,26 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Linkedin from "../icons/LinkedinIcon";
 
 export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const menuItems = [
-    { name: "Dashboard", icon: LayoutDashboard, badge: null },
-    { name: "My Resumes", icon: FileText, badge: "12+" },
-    { name: "Cover Letters", icon: BookOpen, badge: null },
-    { name: "Templates", icon: Sparkles, badge: null },
-    { name: "ATS Analytics", icon: BarChart3, badge: null },
-    { name: "Review Team", icon: Users, badge: null },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, badge: null },
+    { name: "My Resumes", href: "/dashboard/my-resumes", icon: FileText, badge: "12+" },
+    { name: "Cover Letters", href: "/dashboard/cover-letters", icon: BookOpen, badge: null },
+    { name: "Templates", href: "/dashboard/templates", icon: Sparkles, badge: null },
+    { name: "ATS Analytics", href: "/dashboard/ats-analytics", icon: BarChart3, badge: null },
+    { name: "LinkedIn Sync", href: "/dashboard/linkedin-sync", icon: Linkedin, badge: "AI" },
+    { name: "Review Team", href: "/dashboard/review-team", icon: Users, badge: null },
   ];
 
   const generalItems = [
-    { name: "Settings", icon: Settings },
-    { name: "Help", icon: HelpCircle },
-    { name: "Logout", icon: LogOut },
+    { name: "Settings", href: "/dashboard/settings", icon: Settings },
+    { name: "Help", href: "/dashboard/help", icon: HelpCircle },
+    { name: "Logout", href: "/login", icon: LogOut },
   ];
 
   return (
@@ -55,7 +60,7 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed lg:static top-0 left-0 z-40 h-full w-[250px] bg-white border-r border-gray-100 flex flex-col justify-between p-6 transition-transform duration-300 ${
+        className={`fixed lg:static top-0 left-0 z-40 h-full  w-[250px] bg-green-100 border-r border-gray-100 flex flex-col justify-between p-6 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
@@ -87,14 +92,14 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
 
           {/* MENU Section */}
           <div>
-           
             <nav className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = activeTab === item.name;
+                const isActive = activeTab === item.name || pathname === item.href || (item.href === "/dashboard" && pathname === "/");
                 return (
-                  <button
+                  <Link
                     key={item.name}
+                    href={item.href}
                     onClick={() => {
                       if (onTabChange) onTabChange(item.name);
                       setIsOpen(false);
@@ -120,7 +125,7 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
                         {item.badge}
                       </span>
                     )}
-                  </button>
+                  </Link>
                 );
               })}
             </nav>
@@ -134,14 +139,24 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
             <nav className="space-y-1">
               {generalItems.map((item) => {
                 const Icon = item.icon;
+                const isActive = activeTab === item.name || pathname === item.href;
                 return (
-                  <button
+                  <Link
                     key={item.name}
-                    className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-all"
+                    href={item.href}
+                    onClick={() => {
+                      if (onTabChange) onTabChange(item.name);
+                      setIsOpen(false);
+                    }}
+                    className={`w-full flex cursor-pointer items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                      isActive
+                        ? "bg-[#064e3b] text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
                   >
-                    <Icon className="w-4 h-4 text-gray-400" />
+                    <Icon className={`w-4 h-4 ${isActive ? "text-white" : "text-gray-400"}`} />
                     <span>{item.name}</span>
-                  </button>
+                  </Link>
                 );
               })}
             </nav>
