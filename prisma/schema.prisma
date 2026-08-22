@@ -1,6 +1,6 @@
 // ==============================================================================
 // CAREERBUILD PRISMA DATABASE SCHEMA
-// Supports SQLite (for local dev/zero setup) or PostgreSQL (Supabase/Neon for prod)
+// Supabase PostgreSQL Database Configuration
 // ==============================================================================
 
 generator client {
@@ -8,8 +8,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
