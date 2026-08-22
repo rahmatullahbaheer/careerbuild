@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { registerUserInDb } from "@/lib/userDb";
 
 global.otpStore = global.otpStore || new Map();
 
@@ -39,15 +40,21 @@ export async function POST(req) {
       );
     }
 
-    // Verify OTP matching
-    if (storedRecord.code !== otpCode.trim()) {
+    // Verify OTP code matching
+    if (storedRecord.code !== otpCode.toString().trim()) {
       return NextResponse.json(
         { error: "Invalid OTP code. Please double check the 6-digit code sent to your email." },
         { status: 400 }
       );
     }
 
-    // OTP Verified! Clear memory record
+    // OTP Verified! Register/update user password in database
+    await registerUserInDb({
+      email: cleanEmail,
+      password: newPassword,
+    });
+
+    // Clear memory record
     global.otpStore.delete(cleanEmail);
 
     return NextResponse.json({

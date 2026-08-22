@@ -12,13 +12,14 @@ export async function GET(req) {
 
   // If valid Google Client ID exists, initiate Google OAuth consent screen
   if (isValidClientId) {
-    // Dynamically calculate siteUrl for both local development and Vercel production
-    const hostOrigin = process.env.VERCEL_URL
-      ? `https://${process.env.VERCEL_URL}`
-      : origin;
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || hostOrigin || "http://localhost:3000").replace(/\/$/, "");
+    // Dynamic request origin calculation: strictly use localhost origin when running locally
+    const requestOrigin = req.nextUrl?.origin || origin || "http://localhost:3000";
+    const isLocal = requestOrigin.includes("localhost") || requestOrigin.includes("127.0.0.1");
+    const siteUrl = (isLocal ? requestOrigin : (process.env.NEXT_PUBLIC_SITE_URL || requestOrigin)).replace(/\/$/, "");
     const redirectUri = `${siteUrl}/api/auth/google/callback`;
-    
+
+    console.log(`[Google OAuth Init] Client ID: ${googleClientId.substring(0, 15)}... | Redirect URI: ${redirectUri}`);
+
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${googleClientId}&redirect_uri=${encodeURIComponent(
       redirectUri
     )}&response_type=code&scope=openid%20profile%20email&prompt=select_account`;

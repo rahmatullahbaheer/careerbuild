@@ -4,11 +4,11 @@ import { registerUserInDb } from "@/lib/userDb";
 export async function GET(req) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
-  
-  const hostOrigin = process.env.VERCEL_URL
-    ? `https://${process.env.VERCEL_URL}`
-    : origin;
-  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || hostOrigin || "http://localhost:3000").replace(/\/$/, "");
+
+  const requestOrigin = req.nextUrl?.origin || origin || "http://localhost:3000";
+  const isLocal = requestOrigin.includes("localhost") || requestOrigin.includes("127.0.0.1");
+  const siteUrl = (isLocal ? requestOrigin : (process.env.NEXT_PUBLIC_SITE_URL || requestOrigin)).replace(/\/$/, "");
+  const redirectUri = `${siteUrl}/api/auth/google/callback`;
 
   if (!code) {
     return NextResponse.redirect(new URL("/login?error=GoogleAuthFailed", req.url));
@@ -17,7 +17,6 @@ export async function GET(req) {
   try {
     const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
     const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
-    const redirectUri = `${siteUrl}/api/auth/google/callback`;
 
     // Exchange auth code for tokens
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {

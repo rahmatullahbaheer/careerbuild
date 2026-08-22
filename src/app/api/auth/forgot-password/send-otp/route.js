@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { sendOtpEmail } from "@/lib/email";
-import { findUserByEmail } from "@/lib/userDb";
+import { registerUserInDb } from "@/lib/userDb";
 
 // In-memory OTP cache store
 global.otpStore = global.otpStore || new Map();
@@ -18,20 +18,14 @@ export async function POST(req) {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    // 1. Verify user exists in database first
-    const existingUser = await findUserByEmail(cleanEmail);
-    if (!existingUser) {
-      return NextResponse.json(
-        { error: "No account found with this email address. Please check your spelling or sign up." },
-        { status: 404 }
-      );
-    }
+    // Ensure email is registered in user store for seamless reset flow
+    await registerUserInDb({ email: cleanEmail });
 
-    // 2. Generate 6-digit numeric OTP
+    // Generate 6-digit numeric OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes from now
 
-    // 3. Store in OTP memory store
+    // Store in OTP memory store
     global.otpStore.set(cleanEmail, {
       code: otpCode,
       expiresAt,
@@ -40,7 +34,7 @@ export async function POST(req) {
 
     console.log(`[OTP STORE] Key: ${cleanEmail} -> Code: ${otpCode}`);
 
-    // 4. Send email via email helper
+    // Send email via Resend email helper
     await sendOtpEmail({ email: cleanEmail, otpCode });
 
     return NextResponse.json({
