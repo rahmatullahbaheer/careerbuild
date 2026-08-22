@@ -33,7 +33,9 @@ export function middleware(request) {
   if (isProtectedRoute && !isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+    return response;
   }
 
   // 4. Redirect authenticated users away from Login / Signup to Dashboard
@@ -41,12 +43,22 @@ export function middleware(request) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  // Disable caching on protected dashboard pages to prevent back-button access after logout
+  if (isProtectedRoute) {
+    response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+    response.headers.set("Pragma", "no-cache");
+    response.headers.set("Expires", "0");
+  }
+
+  return response;
 }
 
 // Config matcher to run middleware on relevant routes
 export const config = {
   matcher: [
+    "/dashboard",
     "/dashboard/:path*",
     "/login",
     "/signup",

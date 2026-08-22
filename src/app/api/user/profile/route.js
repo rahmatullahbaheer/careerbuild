@@ -1,22 +1,34 @@
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
-  const profile = global.userProfileStore || {
-    name: "",
-    email: "",
-    jobTitle: "",
-    portfolio: "",
-    plan: "FREE",
-    avatar: "",
-  };
+  const authCookie = req.cookies.get("careerbuild_auth");
+  const isAuthenticated = !!(authCookie && authCookie.value === "true");
+
+  if (!isAuthenticated || !global.userProfileStore) {
+    return NextResponse.json(
+      { success: false, authenticated: false, user: null },
+      { status: 401 }
+    );
+  }
 
   return NextResponse.json({
     success: true,
-    user: profile,
+    authenticated: true,
+    user: global.userProfileStore,
   });
 }
 
 export async function POST(req) {
+  const authCookie = req.cookies.get("careerbuild_auth");
+  const isAuthenticated = !!(authCookie && authCookie.value === "true");
+
+  if (!isAuthenticated) {
+    return NextResponse.json(
+      { error: "Unauthorized. Please sign in." },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await req.json();
     const { name, email, jobTitle, portfolio } = body;

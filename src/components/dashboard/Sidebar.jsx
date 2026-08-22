@@ -196,8 +196,14 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
                     onClick={async (e) => {
                       if (isLogout) {
                         e.preventDefault();
-                        await fetch("/api/auth/logout", { method: "POST" });
-                        window.location.href = "/login";
+                        try {
+                          await fetch("/api/auth/logout", { method: "POST" });
+                          if (typeof window !== "undefined") {
+                            sessionStorage.clear();
+                            localStorage.clear();
+                          }
+                        } catch (err) {}
+                        window.location.replace("/login");
                         return;
                       }
                       if (onTabChange) onTabChange(item.name);

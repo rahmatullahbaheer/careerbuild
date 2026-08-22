@@ -3,39 +3,33 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const UserContext = createContext({
-  user: {
-    name: "Alexander Wright",
-    email: "alex.wright@engineer.io",
-    jobTitle: "Senior Software Engineer",
-    portfolio: "https://alexanderwright.dev",
-    plan: "CareerBuild PRO Plan",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
-  },
-  loading: false,
+  user: null,
+  loading: true,
   updateProfile: async () => {},
   refreshUser: async () => {},
+  logout: async () => {},
 });
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState({
-    name: "Alexander Wright",
-    email: "alex.wright@engineer.io",
-    jobTitle: "Senior Software Engineer",
-    portfolio: "https://alexanderwright.dev",
-    plan: "CareerBuild PRO Plan",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
-  });
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
     try {
       const res = await fetch("/api/user/profile");
+      if (!res.ok) {
+        setUser(null);
+        return;
+      }
       const data = await res.json();
       if (data.success && data.user) {
         setUser(data.user);
+      } else {
+        setUser(null);
       }
     } catch (err) {
       console.error("Failed to fetch user context profile:", err);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -63,6 +57,23 @@ export function UserProvider({ children }) {
     }
   };
 
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      setUser(null);
+      if (typeof window !== "undefined") {
+        try {
+          sessionStorage.clear();
+          localStorage.clear();
+        } catch (e) {}
+        window.location.replace("/login");
+      }
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -70,6 +81,7 @@ export function UserProvider({ children }) {
         loading,
         updateProfile,
         refreshUser: fetchUser,
+        logout,
       }}
     >
       {children}

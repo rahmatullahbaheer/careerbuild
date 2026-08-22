@@ -229,8 +229,14 @@ export default function Header({
                     type="button"
                     onClick={async () => {
                       setDropdownOpen(false);
-                      await fetch("/api/auth/logout", { method: "POST" });
-                      window.location.href = "/login";
+                      try {
+                        await fetch("/api/auth/logout", { method: "POST" });
+                        if (typeof window !== "undefined") {
+                          sessionStorage.clear();
+                          localStorage.clear();
+                        }
+                      } catch (e) {}
+                      window.location.replace("/login");
                     }}
                     className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
                   >
