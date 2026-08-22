@@ -2,16 +2,16 @@ import { NextResponse } from "next/server";
 import { registerUserInDb } from "@/lib/userDb";
 
 function getSiteUrl(req) {
-  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
-  const proto = req.headers.get("x-forwarded-proto") || "https";
-  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
-    return `${proto}://${host}`.replace(/\/$/, "");
-  }
   if (process.env.SITE_URL) {
     return process.env.SITE_URL.replace(/\/$/, "");
   }
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  }
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
+    return `${proto}://${host}`.replace(/\/$/, "");
   }
   return req.nextUrl?.origin?.replace(/\/$/, "") || "http://localhost:3000";
 }

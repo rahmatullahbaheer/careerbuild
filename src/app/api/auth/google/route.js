@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 
 function getSiteUrl(req) {
-  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
-  const proto = req.headers.get("x-forwarded-proto") || "https";
-  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
-    return `${proto}://${host}`.replace(/\/$/, "");
-  }
   if (process.env.SITE_URL) {
     return process.env.SITE_URL.replace(/\/$/, "");
   }
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  }
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
+    return `${proto}://${host}`.replace(/\/$/, "");
   }
   return req.nextUrl?.origin?.replace(/\/$/, "") || "http://localhost:3000";
 }
@@ -53,7 +53,7 @@ export async function GET(req) {
   response.cookies.set("careerbuild_auth", "true", {
     httpOnly: true,
     path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 days
+    maxAge: 60 * 60 * 24 * 7,
   });
 
   return response;
