@@ -1,13 +1,26 @@
 import { NextResponse } from "next/server";
 import { registerUserInDb } from "@/lib/userDb";
 
+function getSiteUrl(req) {
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  if (host && !host.includes("localhost") && !host.includes("127.0.0.1")) {
+    return `${proto}://${host}`.replace(/\/$/, "");
+  }
+  if (process.env.SITE_URL) {
+    return process.env.SITE_URL.replace(/\/$/, "");
+  }
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+  }
+  return req.nextUrl?.origin?.replace(/\/$/, "") || "http://localhost:3000";
+}
+
 export async function GET(req) {
-  const { searchParams, origin } = new URL(req.url);
+  const { searchParams } = new URL(req.url);
   const code = searchParams.get("code");
 
-  const requestOrigin = req.nextUrl?.origin || origin || "http://localhost:3000";
-  const isLocal = requestOrigin.includes("localhost") || requestOrigin.includes("127.0.0.1");
-  const siteUrl = (isLocal ? requestOrigin : (process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL || requestOrigin)).replace(/\/$/, "");
+  const siteUrl = getSiteUrl(req);
   const redirectUri = `${siteUrl}/api/auth/google/callback`;
 
   if (!code) {
