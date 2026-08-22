@@ -1,5 +1,7 @@
-// This is your Prisma schema file for CareerBuild Resume & Portfolio Platform.
-// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+// ==============================================================================
+// CAREERBUILD PRISMA DATABASE SCHEMA
+// Supports SQLite (for local dev/zero setup) or PostgreSQL (Supabase/Neon for prod)
+// ==============================================================================
 
 generator client {
   provider = "prisma-client-js"
@@ -8,294 +10,53 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL") // Recommended for serverless DBs like Supabase / Neon
+  directUrl = env("DIRECT_URL")
 }
 
-enum Plan {
-  FREE
-  PRO
-  ENTERPRISE
-}
-
-enum SkillLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-  EXPERT
-}
-
-enum ReviewStatus {
-  PENDING
-  IN_REVIEW
-  COMPLETED
-}
-
-// ------------------------------------------------------
-// User & Authentication
-// ------------------------------------------------------
+// User Account Model
 model User {
-  id            String         @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String?
-  email         String         @unique
-  passwordHash  String?
-  emailVerified DateTime?
+  email         String        @unique
+  password      String?
   image         String?
-  plan          Plan           @default(FREE)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  jobTitle      String?       @default("Senior Software Engineer")
+  portfolio     String?       @default("")
+  plan          String        @default("CareerBuild PRO Plan")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   resumes       Resume[]
   coverLetters  CoverLetter[]
-  atsScans      AtsScan[]
-  reviewRequests ReviewRequest[] @relation("UserReviewRequests")
-  reviewsGiven   ReviewRequest[] @relation("ReviewerRequests")
-  comments      ReviewComment[]
 
   @@map("users")
 }
 
-model PasswordOtp {
-  id        String   @id @default(cuid())
-  email     String
-  code      String
-  expiresAt DateTime
-  verified  Boolean  @default(false)
-  createdAt DateTime @default(now())
-
-  @@index([email])
-  @@map("password_otps")
-}
-
-// ------------------------------------------------------
-// Resume Main Model
-// ------------------------------------------------------
+// Resume Document Model
 model Resume {
-  id           String      @id @default(cuid())
-  userId       String
-  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  template    String   @default("Modern Executive")
+  content     String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  title        String      @default("Untitled Resume")
-  targetRole   String?
-  templateId   String      @default("modern")
-  fontFamily   String      @default("Inter")
-  accentColor  String      @default("#3b82f6")
-  layout       String      @default("single-column")
-  isPublic     Boolean     @default(false)
-  slug         String?     @unique
-  atsScore     Int?        @default(0)
-
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-
-  personalInfo PersonalInfo?
-  experiences  Experience[]
-  educations   Education[]
-  skills       Skill[]
-  projects     Project[]
-  certifications Certification[]
-  atsScans     AtsScan[]
-  reviews      ReviewRequest[]
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("resumes")
 }
 
-// ------------------------------------------------------
-// Resume Contact & Personal Info
-// ------------------------------------------------------
-model PersonalInfo {
-  id          String   @id @default(cuid())
-  resumeId    String   @unique
-  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  fullName    String?
-  headline    String?
-  email       String?
-  phone       String?
-  location    String?
-  website     String?
-  linkedin    String?
-  github      String?
-  summary     String?  @db.Text
-
-  @@map("personal_info")
-}
-
-// ------------------------------------------------------
-// Work Experience
-// ------------------------------------------------------
-model Experience {
-  id           String    @id @default(cuid())
-  resumeId     String
-  resume       Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  company      String
-  position     String
-  location     String?
-  startDate    DateTime
-  endDate      DateTime?
-  isCurrent    Boolean   @default(false)
-  description  String?   @db.Text
-  highlights   String[]  // Bullet points array
-
-  orderIndex   Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  @@map("experiences")
-}
-
-// ------------------------------------------------------
-// Education
-// ------------------------------------------------------
-model Education {
-  id           String    @id @default(cuid())
-  resumeId     String
-  resume       Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  institution  String
-  degree       String
-  fieldOfStudy String?
-  location     String?
-  startDate    DateTime
-  endDate      DateTime?
-  isCurrent    Boolean   @default(false)
-  gpa          String?
-
-  orderIndex   Int       @default(0)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  @@map("educations")
-}
-
-// ------------------------------------------------------
-// Skills
-// ------------------------------------------------------
-model Skill {
-  id         String     @id @default(cuid())
-  resumeId   String
-  resume     Resume     @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  name       String
-  category   String?    @default("Technical") // e.g. Technical, Soft, Languages, Frameworks
-  level      SkillLevel @default(ADVANCED)
-
-  orderIndex Int        @default(0)
-
-  @@map("skills")
-}
-
-// ------------------------------------------------------
-// Projects
-// ------------------------------------------------------
-model Project {
-  id           String   @id @default(cuid())
-  resumeId     String
-  resume       Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  title        String
-  description  String?  @db.Text
-  techStack    String[]
-  liveUrl      String?
-  githubUrl    String?
-
-  orderIndex   Int      @default(0)
-
-  @@map("projects")
-}
-
-// ------------------------------------------------------
-// Certifications
-// ------------------------------------------------------
-model Certification {
-  id           String    @id @default(cuid())
-  resumeId     String
-  resume       Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-
-  name         String
-  issuer       String
-  issueDate    DateTime?
-  credentialUrl String?
-
-  orderIndex   Int       @default(0)
-
-  @@map("certifications")
-}
-
-// ------------------------------------------------------
-// Cover Letters
-// ------------------------------------------------------
+// Cover Letter Document Model
 model CoverLetter {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  content     String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  title          String   @default("Untitled Cover Letter")
-  targetCompany  String?
-  targetRole     String?
-  jobDescription String?  @db.Text
-  bodyText       String   @db.Text
-  templateId     String   @default("standard")
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("cover_letters")
-}
-
-// ------------------------------------------------------
-// ATS Score Scans
-// ------------------------------------------------------
-model AtsScan {
-  id                  String   @id @default(cuid())
-  resumeId            String
-  resume              Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-  userId              String
-  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  targetJobTitle      String
-  targetJobDescription String  @db.Text
-  overallScore        Int      // Score 0 - 100
-  matchedKeywords     String[]
-  missingKeywords     String[]
-  suggestions         String[]
-  scannedAt           DateTime @default(now())
-
-  @@map("ats_scans")
-}
-
-// ------------------------------------------------------
-// Team & Peer Review System
-// ------------------------------------------------------
-model ReviewRequest {
-  id          String       @id @default(cuid())
-  resumeId    String
-  resume      Resume       @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-  requesterId String
-  requester   User         @relation("UserReviewRequests", fields: [requesterId], references: [id], onDelete: Cascade)
-  reviewerId  String?
-  reviewer    User?        @relation("ReviewerRequests", fields: [reviewerId], references: [id], onDelete: Cascade)
-
-  status      ReviewStatus @default(PENDING)
-  scoreGiven  Int?
-  notes       String?      @db.Text
-  createdAt   DateTime     @default(now())
-
-  comments    ReviewComment[]
-
-  @@map("review_requests")
-}
-
-model ReviewComment {
-  id              String        @id @default(cuid())
-  reviewRequestId String
-  reviewRequest   ReviewRequest @relation(fields: [reviewRequestId], references: [id], onDelete: Cascade)
-  authorId        String
-  author          User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-
-  section         String?       // e.g. "Work Experience", "ATS Keywords"
-  comment         String        @db.Text
-  createdAt       DateTime      @default(now())
-
-  @@map("review_comments")
 }
