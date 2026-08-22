@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "@supabase/supabase-js": "^2.112.3",
     "formik": "^2.4.9",
     "framer-motion": "^13.1.1",
     "lucide-react": "^1.33.0",
