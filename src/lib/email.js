@@ -1,12 +1,14 @@
 /**
  * CareerBuild Email Helper Utility
- * High-Performance, Ultra-Premium Responsive HTML Email Templates
+ * Dedicated Nodemailer SMTP Implementation
  */
+
+import nodemailer from "nodemailer";
 
 export async function sendOtpEmail({ email, otpCode }) {
   console.log(`[CareerBuild Email Helper] Sending 6-digit OTP (${otpCode}) to ${email}`);
 
-  const formattedOtp = otpCode.toString().split("").join(" ");
+  const targetRecipient = email.toLowerCase().trim();
 
   const htmlContent = `
     <!DOCTYPE html>
@@ -58,7 +60,7 @@ export async function sendOtpEmail({ email, otpCode }) {
                     </h2>
                     <p style="color: #475569; font-size: 15px; line-height: 1.6; margin: 0 0 28px 0;">
                       Hello,<br>
-                      We received a request to reset the password associated with your CareerBuild account (<strong style="color: #0f172a;">${email}</strong>). Use the 6-digit verification code below to complete your request:
+                      We received a request to reset the password associated with your CareerBuild account (<strong style="color: #0f172a;">${targetRecipient}</strong>). Use the 6-digit verification code below to complete your request:
                     </p>
 
                     <!-- Hero OTP Display Card -->
@@ -90,7 +92,7 @@ export async function sendOtpEmail({ email, otpCode }) {
                 <tr>
                   <td style="background-color: #f8fafc; padding: 24px 40px; border-top: 1px solid #e2e8f0; text-align: center;">
                     <p style="color: #94a3b8; font-size: 12px; line-height: 1.5; margin: 0 0 8px 0;">
-                      This is an automated operational email sent to ${email}. Please do not reply to this message.
+                      This is an automated operational email sent to ${targetRecipient}. Please do not reply to this message.
                     </p>
                     <p style="color: #94a3b8; font-size: 12px; margin: 0; font-weight: 500;">
                       © ${new Date().getFullYear()} CareerBuild AI. All rights reserved.
@@ -106,67 +108,45 @@ export async function sendOtpEmail({ email, otpCode }) {
     </html>
   `;
 
-  // If RESEND_API_KEY is provided in .env
-  if (process.env.RESEND_API_KEY) {
+  // Nodemailer SMTP Delivery (If SMTP_HOST and SMTP_USER are defined)
+  if (process.env.SMTP_HOST && process.env.SMTP_USER) {
     try {
-      const targetRecipient = email.toLowerCase().trim();
-      const ownerEmail = "baheer224@gmail.com";
-
-      // Attempt to send email to requested target recipient
-      let res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      const port = parseInt(process.env.SMTP_PORT || "587", 10);
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: port,
+        secure: process.env.SMTP_SECURE === "true" || port === 465,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
         },
-        body: JSON.stringify({
-          from: process.env.EMAIL_FROM || "CareerBuild <onboarding@resend.dev>",
-          to: [targetRecipient],
-          subject: `${otpCode} is your CareerBuild verification code`,
-          html: htmlContent,
-        }),
       });
 
-      let data = await res.json();
+      // Explicitly set sender display name as "CareerBuild" <smtp_user>
+      const fromAddress = {
+        name: "CareerBuild",
+        address: process.env.SMTP_USER,
+      };
 
-      // If Resend restricts unverified recipients on free testing tier, forward delivery to owner inbox
-      if (!res.ok && data.message?.includes("only send testing emails")) {
-        console.warn(`[Resend Free Tier Notice] Target recipient ${targetRecipient} is unverified. Delivery routed to ${ownerEmail}`);
-        
-        res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          },
-          body: JSON.stringify({
-            from: process.env.EMAIL_FROM || "CareerBuild <onboarding@resend.dev>",
-            to: [ownerEmail],
-            subject: `[OTP for ${targetRecipient}] ${otpCode} is your CareerBuild verification code`,
-            html: htmlContent,
-          }),
-        });
+      const info = await transporter.sendMail({
+        from: fromAddress,
+        to: targetRecipient,
+        subject: `${otpCode} is your CareerBuild verification code`,
+        html: htmlContent,
+      });
 
-        data = await res.json();
-      }
-
-      if (res.ok) {
-        console.log(`[Resend Email] Successfully delivered OTP email. Resend ID: ${data.id}`);
-        return { success: true, provider: "resend", data };
-      } else {
-        console.warn(`[Resend Email Warning] Resend API returned ${res.status}: ${data.message || JSON.stringify(data)}`);
-        console.log(`[OTP FALLBACK LOG] Target Email: ${targetRecipient} -> OTP Code: ${otpCode}`);
-        return { success: true, provider: "resend_notice", message: data.message, otpCode };
-      }
+      console.log(`[Nodemailer SMTP] Successfully sent OTP email to ${targetRecipient}. MessageId: ${info.messageId}`);
+      return { success: true, provider: "nodemailer", messageId: info.messageId };
     } catch (err) {
-      console.error("Resend API fetch error:", err);
+      console.error("[Nodemailer SMTP Error] Failed to send email via Nodemailer:", err.message);
     }
   }
 
-  // Fallback Simulation for Development
+  // Fallback Simulation for Development & Testing
+  console.log(`[DEV OTP LOG] Target Email: ${targetRecipient} -> OTP Code: ${otpCode}`);
   return {
     success: true,
     provider: "dev_console",
-    message: `OTP ${otpCode} sent to ${email}`,
+    message: `OTP ${otpCode} sent to ${targetRecipient}`,
   };
 }

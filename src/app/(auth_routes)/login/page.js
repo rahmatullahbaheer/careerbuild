@@ -1,9 +1,9 @@
 import AuthForm from "@/components/AuthForm";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.vercel.app";
 
 export const metadata = {
-  title: "Log In to Your Account | CareerBuild AI Resume Builder",
+  title: "Log In to Your Account | CareerBuild Resume Builder",
   description:
     "Sign in to your CareerBuild account to edit, customize, download, and manage your ATS-friendly professional resumes and cover letters.",
   alternates: {
