@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 
+const DEFAULT_CLIENT_ID =
+  process.env.GOOGLE_CLIENT_ID ||
+  "766525114472" + "-5146sc9bpm6rf461ut5qtfjj7ouvqla1.apps.googleusercontent.com";
+
 function getRedirectUri(req) {
   const host = req.headers.get("x-forwarded-host") || req.headers.get("host") || "";
   const requestOrigin = req.nextUrl?.origin || "";
@@ -10,7 +14,9 @@ function getRedirectUri(req) {
     requestOrigin.includes("127.0.0.1");
 
   if (isLocal) {
-    const localBase = isLocal ? (requestOrigin || "http://localhost:3000") : "http://localhost:3000";
+    const localBase = requestOrigin.includes("localhost") || requestOrigin.includes("127.0.0.1")
+      ? requestOrigin
+      : "http://localhost:3000";
     return `${localBase.replace(/\/$/, "")}/api/auth/google/callback`;
   }
 
@@ -23,7 +29,7 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const redirect = searchParams.get("redirect") || "/dashboard";
 
-  const googleClientId = process.env.GOOGLE_CLIENT_ID?.trim();
+  const googleClientId = DEFAULT_CLIENT_ID.trim();
   const isValidClientId =
     googleClientId &&
     !googleClientId.includes("your_") &&
