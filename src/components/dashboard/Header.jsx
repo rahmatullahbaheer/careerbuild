@@ -16,16 +16,19 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
+import { useUser } from "@/context/UserContext";
+
 export default function Header({
   pageName = "Dashboard",
-  user = {
+  user: propUser,
+}) {
+  const { user: contextUser } = useUser();
+  const user = contextUser || propUser || {
     name: "Alexander Wright",
     email: "alex.wright@engineer.io",
     plan: "Pro Plan",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
-  },
-}) {
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
+  };
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -222,14 +225,18 @@ export default function Header({
 
                 {/* Log Out Button */}
                 <div className="pt-1.5 mt-1.5 border-t border-gray-100">
-                  <Link
-                    href="/login"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors w-full text-left"
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setDropdownOpen(false);
+                      await fetch("/api/auth/logout", { method: "POST" });
+                      window.location.href = "/login";
+                    }}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors w-full text-left cursor-pointer"
                   >
                     <LogOut className="w-4 h-4 text-rose-500" />
                     <span>Log Out</span>
-                  </Link>
+                  </button>
                 </div>
               </motion.div>
             )}

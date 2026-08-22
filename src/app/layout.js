@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.app";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://careerbuild.vercel.app";
 
 // ── Top-Ranking SEO Metadata ──────────────────────────────────────────────────
 
@@ -280,6 +280,8 @@ const jsonLd = {
 
 // ── Root Layout ────────────────────────────────────────────────────────────
 
+import { UserProvider } from "@/context/UserContext";
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -294,7 +296,9 @@ export default function RootLayout({ children }) {
         <meta name="format-detection" content="telephone=no, date=no, email=no, address=no" />
       </head>
       <body className="min-h-full flex flex-col bg-white text-zinc-900">
-        {children}
+        <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   );

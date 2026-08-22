@@ -12,7 +12,11 @@ import ProjectProgress from "../ProjectProgress";
 import TimeTracker from "../TimeTracker";
 import { Plus } from "lucide-react";
 
+import { useUser } from "@/context/UserContext";
+
 export default function DashboardView() {
+  const { user } = useUser();
+
   return (
     <div className="space-y-5">
       {/* Hero Action Row */}
@@ -24,7 +28,7 @@ export default function DashboardView() {
       >
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-gray-900 tracking-tight">
-            Resume & Career Dashboard
+            Welcome back, {user?.name || "Alexander"} 👋
           </h1>
           <p className="text-xs text-gray-500 font-medium mt-0.5">
             Build, optimize, and manage your resumes, cover letters & LinkedIn profile.

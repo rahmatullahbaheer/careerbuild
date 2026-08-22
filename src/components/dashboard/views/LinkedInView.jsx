@@ -30,14 +30,20 @@ import {
 } from "lucide-react";
 import Linkedin from "../../icons/LinkedinIcon";
 
+import { useUser } from "@/context/UserContext";
+
 export default function LinkedInView() {
+  const { user } = useUser();
+  const userName = user?.name || "Alexander Wright";
+  const userJobTitle = user?.jobTitle || "Senior Software Engineer";
+
   const [activeTab, setActiveTab] = useState("enhancer"); // 'enhancer' | 'keywords' | 'posts' | 'outreach'
   const [isSyncing, setIsSyncing] = useState(false);
   const [copiedField, setCopiedField] = useState(null);
   
   // Interactive Headline Generator state
   const [selectedHeadlineStyle, setSelectedHeadlineStyle] = useState("Impact-Driven");
-  const [customRole, setCustomRole] = useState("Senior Full-Stack Engineer");
+  const [customRole, setCustomRole] = useState(userJobTitle);
 
   // Post Assistant state
   const [postType, setPostType] = useState("job_seeking");
@@ -109,19 +115,19 @@ What optimization techniques have had the biggest impact in your web application
       id: "recruiter_dm",
       title: "Direct Recruiter Outreach",
       description: "Send to internal recruiters who posted a relevant job opening.",
-      message: `Hi [Recruiter Name],\n\nI noticed you're recruiting for [Job Title] roles at [Company Name].\n\nWith my background as a ${customRole} (React, Node, Next.js) and proven track record of scaling high-traffic web applications, I believe my skill set aligns closely with what your engineering team is looking for.\n\nI'd welcome a quick 10-minute chat to discuss how I can contribute to [Company Name]. Here is my portfolio/resume link!\n\nBest regards,\nTotok Michael`
+      message: `Hi [Recruiter Name],\n\nI noticed you're recruiting for [Job Title] roles at [Company Name].\n\nWith my background as a ${customRole} (React, Node, Next.js) and proven track record of scaling high-traffic web applications, I believe my skill set aligns closely with what your engineering team is looking for.\n\nI'd welcome a quick 10-minute chat to discuss how I can contribute to [Company Name]. Here is my portfolio/resume link!\n\nBest regards,\n${userName}`
     },
     {
       id: "eng_manager",
       title: "Engineering Manager Connection",
       description: "Connect with tech leads and engineering directors directly.",
-      message: `Hi [Manager Name],\n\nI've been following [Company Name]'s tech engineering updates and love your recent work on [Project/Feature Name].\n\nAs a ${customRole} with deep expertise in scalable React architecture and cloud systems, I'm super interested in upcoming opportunities on your team.\n\nWould love to connect and keep in touch as your engineering team grows!\n\nBest,\nTotok Michael`
+      message: `Hi [Manager Name],\n\nI've been following [Company Name]'s tech engineering updates and love your recent work on [Project/Feature Name].\n\nAs a ${customRole} with deep expertise in scalable React architecture and cloud systems, I'm super interested in upcoming opportunities on your team.\n\nWould love to connect and keep in touch as your engineering team grows!\n\nBest,\n${userName}`
     },
     {
       id: "referral_request",
       title: "Employee Referral Request",
       description: "Ask a peer or second-degree connection for a referral.",
-      message: `Hi [Name],\n\nHope you're having a great week! I saw an opening for [Job Title] at [Company Name] and noticed you work there.\n\nI'm currently applying for the role and would be immensely grateful if you'd be open to submitting a quick internal referral. My background includes 6+ years as a ${customRole} building high-impact web products.\n\nHappy to share my resume or hop on a quick call if helpful!\n\nThanks so much,\nTotok Michael`
+      message: `Hi [Name],\n\nHope you're having a great week! I saw an opening for [Job Title] at [Company Name] and noticed you work there.\n\nI'm currently applying for the role and would be immensely grateful if you'd be open to submitting a quick internal referral. My background includes 6+ years as a ${customRole} building high-impact web products.\n\nHappy to share my resume or hop on a quick call if helpful!\n\nThanks so much,\n${userName}`
     }
   ];
 
@@ -155,8 +161,8 @@ What optimization techniques have had the biggest impact in your web application
             <div className="flex items-center gap-4 pt-1">
               <div className="relative">
                 <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120"
-                  alt="Totok Michael"
+                  src={user?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"}
+                  alt={userName}
                   className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover ring-4 ring-white/20 shadow-md"
                 />
                 <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[#0a66c2] rounded-full ring-2 ring-white flex items-center justify-center text-white">
@@ -166,7 +172,7 @@ What optimization techniques have had the biggest impact in your web application
 
               <div>
                 <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-                  Totok Michael
+                  {userName}
                   <a
                     href="https://linkedin.com"
                     target="_blank"

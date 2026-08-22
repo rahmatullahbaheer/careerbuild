@@ -187,11 +187,19 @@ export default function Sidebar({ activeTab = "Dashboard", onTabChange }) {
                 const Icon = item.icon;
                 const isActive =
                   activeTab === item.name || pathname === item.href;
+                const isLogout = item.name === "Logout";
+
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={() => {
+                    onClick={async (e) => {
+                      if (isLogout) {
+                        e.preventDefault();
+                        await fetch("/api/auth/logout", { method: "POST" });
+                        window.location.href = "/login";
+                        return;
+                      }
                       if (onTabChange) onTabChange(item.name);
                       setIsOpen(false);
                     }}
