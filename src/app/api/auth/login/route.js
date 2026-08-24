@@ -48,8 +48,15 @@ export async function POST(req) {
       user,
     });
 
-    // Set secure auth cookie
+    // Set secure auth cookies
     response.cookies.set("careerbuild_auth", "true", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    });
+
+    response.cookies.set("careerbuild_user_id", user.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       path: "/",

@@ -37,7 +37,7 @@ export async function POST(req) {
       plan: "FREE",
     });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Account created successfully! Welcome to CareerBuild.",
       user: {
@@ -47,6 +47,22 @@ export async function POST(req) {
         plan: newUser.plan,
       },
     });
+
+    response.cookies.set("careerbuild_auth", "true", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    response.cookies.set("careerbuild_user_id", newUser.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
+    return response;
   } catch (error) {
     console.error("Sign up API error:", error);
     return NextResponse.json(

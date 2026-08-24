@@ -40,6 +40,28 @@ async function ensureUsersTableExists() {
 ensureUsersTableExists();
 
 /**
+ * Ensure a specific userId exists in public.users to satisfy foreign key constraints
+ */
+export async function ensureUserRecordExists(userId) {
+  if (!userId) return;
+  await ensureUsersTableExists();
+  try {
+    const checkRes = await queryPg(`SELECT id FROM public.users WHERE id = $1 LIMIT 1;`, [userId]);
+    if (checkRes.rows.length === 0) {
+      await queryPg(
+        `INSERT INTO public.users (id, name, email, plan, "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, NOW(), NOW())
+         ON CONFLICT (id) DO NOTHING;`,
+        [userId, "Rahmatullah Baheer", `${userId}@careerbuild.io`, "CareerBuild PRO Plan"]
+      );
+      console.log(`[Native PG DB] Auto-seeded user record for foreign key integrity: ${userId}`);
+    }
+  } catch (err) {
+    console.error("[Ensure User Record Notice]:", err.message);
+  }
+}
+
+/**
  * Find user by email directly from PostgreSQL database
  */
 export async function findUserByEmail(email) {
